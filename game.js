@@ -137,6 +137,32 @@ const LOCATIONS = {
         name: "Aetherial Void",
         desc: "The edge of the universe where stars are born. You aren't fishing in water, but in pure stardust.",
         colors: ["#311b92", "#000000"] // Deep Indigo & Void Black
+    },
+    // New Expeditions from JSON
+    confection_coast: {
+        name: "Confection Coast",
+        desc: "A sugary paradise where the waves are made of warm syrup and the sand is pure powdered sugar.",
+        colors: ["#ffb7b2", "#b5ead7"] // Pastel Coral & Mint
+    },
+    origami_archipelago: {
+        name: "Origami Archipelago",
+        desc: "A delicate world of folded parchment and ink, where paper cranes nest in cardboard cliffs.",
+        colors: ["#fdfbf7", "#9a8c98"] // Cream & Paper Grey
+    },
+    vaporwave_vista: {
+        name: "Vaporwave Vista",
+        desc: "An eternal 80s sunset over a wireframe ocean, humming with low-fidelity synth nostalgia.",
+        colors: ["#e0bbe4", "#ffdfd3"] // Pastel Purple & Peach
+    },
+    prism_light_pools: {
+        name: "Prism-Light Pools",
+        desc: "Blindingly clear shallows where light shatters into rainbows across mirror-smooth surfaces.",
+        colors: ["#ffffff", "#e6e6fa"] // White & Lavender
+    },
+    silk_thread_stream: {
+        name: "Silk-Thread Stream",
+        desc: "A river composed of millions of flowing golden threads, woven by the hands of unseen giants.",
+        colors: ["#fff9c4", "#d1c4e9"] // Light Gold & Lavender
     }
 };
 // Deep freeze utility for nested objects
@@ -165,7 +191,15 @@ const WEATHER_DATA = {
     flash_blizzard: { name: 'Flash Blizzard', icon: '❄️', luck: 0.8, buff: 'Cryo-Preserved', buffChance: 1.0, valBonus: 0.6, difficulty_mod: 1.5, probability: 0.03, desc: "-20% Luck (Lines freeze). However, 100% chance for fish to be 'Cryo-Preserved' (+60% Value)." },
     acid_downpour: { name: 'Acid Downpour', icon: '🧪', luck: 0.9, buff: 'Mutated', buffChance: 0.3, valBonus: 1.5, difficulty_mod: 1.2, probability: 0.02, desc: "Corrosive rain burns gear (-10% Luck). Small chance for 'Mutated' fish (+150% Value)." },
     spore_bloom: { name: 'Spore Bloom', icon: '🍄', luck: 1.15, buff: 'Symbiotic', buffChance: 0.45, valBonus: 0.25, difficulty_mod: 1.1, probability: 0.05, desc: "Fungal clouds drift over the water. +15% Luck. Fish may become 'Symbiotic' (+25% Value)." },
-    tectonic_shift: { name: 'Tectonic Shift', icon: '🌋', luck: 1.5, buff: 'Agitated', buffChance: 0.2, valBonus: 0.15, difficulty_mod: 1.4, probability: 0.04, desc: "Earthquakes startle bottom-feeders. +50% Luck (Massive bite rate) but fish are erratic and 'Agitated'." }
+    tectonic_shift: { name: 'Tectonic Shift', icon: '🌋', luck: 1.5, buff: 'Agitated', buffChance: 0.2, valBonus: 0.15, difficulty_mod: 1.4, probability: 0.04, desc: "Earthquakes startle bottom-feeders. +50% Luck (Massive bite rate) but fish are erratic and 'Agitated'." },
+    // Additional Weather from JSON
+    golden_hour: { name: 'Golden Hour', icon: '🌅', luck: 1.5, buff: 'Gilded', buffChance: 0.5, valBonus: 0.5, difficulty_mod: 1.2, probability: 0.05, desc: "The sun hits the water just right. +50% Luck. Fish shimmer with 'Gilded' scales (+50% Value), but are faster to flee." },
+    crimson_tide: { name: 'Crimson Tide', icon: '🩸', luck: 1.3, buff: 'Frenzied', buffChance: 0.3, valBonus: 0.25, difficulty_mod: 1.6, probability: 0.08, desc: "A red algal bloom spreads. +30% Luck. Fish are aggressive and 'Frenzied' (+25% Value), making the minigame very fast." },
+    ashfall: { name: 'Ashfall', icon: '🌋', luck: 0.9, buff: 'Obsidian-Clad', buffChance: 0.4, valBonus: 0.4, difficulty_mod: 0.8, probability: 0.06, desc: "Volcanic grit fills the air. -10% Luck (Gills clogged). Fish are sluggish (easier catch) and 'Obsidian-Clad' (+40% Value)." },
+    diamond_dust: { name: 'Diamond Dust', icon: '✨', luck: 1.1, buff: 'Crystallized', buffChance: 0.7, valBonus: 0.15, difficulty_mod: 1.1, probability: 0.1, desc: "Suspended ice crystals refract light. +10% Luck. High chance for 'Crystallized' fish (+15% Value) due to extreme cold." },
+    monsoon: { name: 'Monsoon', icon: '🌊', luck: 1.25, buff: 'Torrential', buffChance: 0.2, valBonus: 0.3, difficulty_mod: 1.4, probability: 0.07, desc: "Relentless tropical rain. +25% Luck. Massive fish surface to feed, becoming 'Torrential' (+30% Value) but fighting hard." },
+    autumn_drift: { name: 'Autumn Drift', icon: '🍂', luck: 1.2, buff: 'Harvest-Ready', buffChance: 0.5, valBonus: 0.2, difficulty_mod: 0.9, probability: 0.15, desc: "Orange leaves blanket the surface. +20% Luck. Fish mistake leaves for food; they are 'Harvest-Ready' (+20% Value) and calm." },
+    swamp_haze: { name: 'Swamp Haze', icon: '🐊', luck: 1.0, buff: 'Ancient', buffChance: 0.1, valBonus: 2.0, difficulty_mod: 1.3, probability: 0.04, desc: "A thick, humid vapor rises. Neutral Luck. Very rare chance to find 'Ancient' fish variants that sell for triple value (+200%)." }
 };
 // Freeze weather data to prevent console exploits
 deepFreeze(WEATHER_DATA);
@@ -291,6 +325,47 @@ const FISH_DB = {
         epic: [['Supernova Snapper', 75.0, 180.0], ['Void Ray', 80.0, 195.0], ['Galaxy Gar', 72.0, 170.0]],
         legendary: [['Event Horizon', 500.0, 1300.0], ['Dark Matter Dragon', 550.0, 1400.0]],
         mythic: [['The Big Bang', 3000.0, 7500.0]]
+    },
+    // New Expedition Fish from JSON
+    confection_coast: {
+        common: [['Sugar Crystal', 0.1, 0.5], ['Syrup Guppy', 0.2, 0.8], ['Sprinkle Minnow', 0.3, 0.9], ['Gummy Worm Fish', 0.4, 1.2], ['Candy Corn Crab', 0.5, 1.5], ['Wafer Snapper', 0.6, 2.0], ['Lollipop Tetra', 0.5, 1.8], ['Cocoa Nibbler', 0.8, 2.5], ['Jellybean Darter', 0.4, 1.4], ['Frosting Flounder', 1.0, 3.0]],
+        uncommon: [['Marshmallow Bass', 2.5, 6.0], ['Licorice Eel', 3.0, 7.5], ['Toffee Trout', 3.5, 8.0], ['Biscuit Skate', 4.0, 9.0], ['Caramel Carp', 3.8, 8.5], ['Peppermint Perch', 2.8, 6.5], ['Donut Discus', 3.2, 7.0], ['Hard-Candy Cod', 4.5, 10.0], ['Meringue Ray', 5.0, 11.0], ['Fizzy Lifter', 2.5, 5.5]],
+        rare: [['Gingerbread Grouper', 12.0, 25.0], ['Red Velvet Snapper', 15.0, 30.0], ['Macaron Manta', 18.0, 35.0], ['Rock Candy Lobster', 10.0, 22.0], ['Cotton Candy Koi', 14.0, 28.0], ['Bubblegum Puffer', 8.0, 20.0], ['Fudge Brownie Catfish', 16.0, 32.0], ['Truffle Turtle', 20.0, 40.0]],
+        epic: [['Gelatinous Giant', 40.0, 90.0], ['Jawbreaker Shark', 50.0, 110.0], ['Marzipan Marlin', 60.0, 130.0], ['Crème Brûlée Colossus', 55.0, 120.0], ['Ganache Gar', 45.0, 100.0], ['Swirl-Pop Sturgeon', 70.0, 150.0], ['Tiramisu Tigerfish', 65.0, 140.0], ['Honeycomb Hammerhead', 80.0, 180.0]],
+        legendary: [['Wedding Cake Whale', 300.0, 700.0], ['Royal Icing Leviathan', 400.0, 900.0], ['Eternal Gobstopper', 250.0, 600.0], ['Molten Chocolate Maw', 350.0, 800.0], ['The Sugar Rush', 500.0, 1000.0]],
+        mythic: [['The Confectioner', 2000.0, 4500.0], ['Grand Gateau', 2500.0, 5000.0], ['Infinite Glaze', 2200.0, 4800.0], ['Spirit of Sweetness', 3000.0, 6000.0]]
+    },
+    origami_archipelago: {
+        common: [['Paperclip Minnow', 0.1, 0.4], ['Pulp Tetra', 0.2, 0.7], ['Sticky-Note Snapper', 0.3, 1.0], ['Cardboard Crab', 0.5, 1.8], ['Tissue Guppy', 0.1, 0.5], ['Folded Fin', 0.4, 1.2], ['Confetti Darter', 0.2, 0.8], ['Scrap Shad', 0.6, 2.0], ['Bookmark Bass', 0.8, 2.5], ['Doodle Bug', 0.3, 1.1]],
+        uncommon: [['Envelope Ray', 2.0, 5.0], ['Manilla Carp', 3.0, 7.0], ['Corrugated Cod', 4.0, 9.0], ['Origami Crane-Fish', 2.5, 6.0], ['Ink-Stain Eel', 3.5, 8.0], ['Parchment Perch', 2.8, 6.5], ['Stationary Skate', 4.5, 10.0], ['Blueprint Bluegill', 3.2, 7.5], ['Scissor-Tail', 2.0, 5.5], ['Papyrus Pike', 5.0, 12.0]],
+        rare: [['Cardstock Catfish', 10.0, 25.0], ['Quill-Pen Squid', 12.0, 28.0], ['Vellum Viper', 15.0, 32.0], ['Watermark Walleye', 18.0, 35.0], ['Calligraphy Koi', 14.0, 30.0], ['Papier-Mâché Puffer', 20.0, 45.0], ['Staple Remover Shark', 25.0, 50.0], ['Binding Glue Gar', 22.0, 48.0]],
+        epic: [['Hardcover Grouper', 50.0, 120.0], ['Scrollwork Serpent', 60.0, 140.0], ['Pop-Up Book Predator', 70.0, 160.0], ['Fountain Pen Leviathan', 80.0, 180.0], ['Encyclopedia Eel', 90.0, 200.0], ['The Great Draft', 100.0, 220.0], ['Carbon Copy Colossus', 110.0, 240.0], ['Marble-Ink Manta', 120.0, 260.0]],
+        legendary: [['The First Edition', 350.0, 800.0], ['Library Guardian', 400.0, 900.0], ['Masterpiece Ray', 450.0, 1000.0], ['Ancient Scroll', 500.0, 1100.0], ['The Final Chapter', 600.0, 1300.0]],
+        mythic: [['The Blank Page', 2000.0, 4500.0], ['Infinite Fold', 2500.0, 5500.0], ['Living Story', 3000.0, 6500.0], ['Papercut Phantom', 3500.0, 7000.0]]
+    },
+    vaporwave_vista: {
+        common: [['Static Shad', 0.1, 0.5], ['Scanline Tetra', 0.2, 0.6], ['Grid Guppy', 0.1, 0.4], ['Vector Minnow', 0.3, 0.8], ['Pastel Prawn', 0.1, 0.3], ['Low-Fi Leech', 0.2, 0.5], ['Wireframe Worm', 0.1, 0.2], ['Sunset Sardine', 0.3, 0.7], ['VHS Darter', 0.4, 0.9], ['Betamax Bass', 0.5, 1.2], ['Floppy Flounder', 0.6, 1.5], ['Gradient Goby', 0.2, 0.6], ['Polygon Perch', 0.4, 1.0], ['Synth Snapper', 0.5, 1.3]],
+        uncommon: [['Retro Ray', 2.0, 5.0], ['Analog Angler', 2.5, 6.0], ['Chromatic Cod', 3.0, 7.0], ['Glitch Grouper', 4.0, 9.0], ['Cyber-Palm Crab', 1.5, 4.0], ['Laser Disc Lobster', 2.0, 5.5], ['CRT Catfish', 3.5, 8.0], ['Noise Nibbler', 1.8, 4.5], ['Distortion Drum', 3.2, 7.5], ['Reverb Roach', 1.2, 3.0], ['Equalizer Eel', 2.8, 6.5], ['Waveform Walleye', 3.0, 7.0]],
+        rare: [['Magnetic Carp', 8.0, 18.0], ['Neon-Striped Bass', 9.0, 20.0], ['Magenta Mackerel', 7.5, 16.0], ['Cyan Cichlid', 6.0, 14.0], ['Grid-Line Gar', 10.0, 22.0], ['Retrowave Ray', 12.0, 25.0], ['Outrun Oscar', 8.5, 19.0], ['VCR Viper', 11.0, 24.0], ['Synth-Pop Shark', 15.0, 30.0], ['Cassette Eel', 9.5, 21.0]],
+        epic: [['Surround Sound Shark', 45.0, 100.0], ['High-Fidelity Halibut', 50.0, 110.0], ['Resolution Ray', 55.0, 120.0], ['Pixel Pike', 40.0, 90.0], ['Voxel Viper', 48.0, 105.0], ['Texture Trout', 42.0, 95.0], ['Render Ray', 60.0, 130.0], ['Shader Shark', 65.0, 140.0]],
+        legendary: [['Refresh-Rate Ray', 250.0, 600.0], ['Latency Leviathan', 300.0, 700.0], ['Buffering Beast', 280.0, 650.0], ['Packet-Loss Pike', 260.0, 620.0], ['The Mainframe', 400.0, 900.0]],
+        mythic: [['Bandwidth Behemoth', 2000.0, 5000.0], ['The Glitch King', 2500.0, 6000.0], ['System Failure', 2200.0, 5500.0], ['The Blue Screen', 2800.0, 6500.0]]
+    },
+    prism_light_pools: {
+        common: [['Clear Minnow', 0.1, 0.4], ['Glass Guppy', 0.1, 0.3], ['Mirror Mullet', 0.2, 0.6], ['Reflect Roach', 0.2, 0.5], ['Shimmer Shad', 0.3, 0.7], ['Glint Goby', 0.1, 0.4], ['Sparkle Sprat', 0.1, 0.3], ['Crystal Crab', 0.4, 1.2], ['Diamond Darter', 0.2, 0.5], ['Quartz Quillback', 0.5, 1.5], ['Lens Lobster', 0.6, 1.8], ['Optic Oyster', 0.3, 0.9], ['Photon Prawn', 0.1, 0.4], ['Ray Roach', 0.2, 0.6]],
+        uncommon: [['Beam Bass', 2.5, 6.0], ['Spectrum Snapper', 3.0, 7.0], ['Rainbow Runner', 2.0, 5.0], ['Prism Perch', 2.2, 5.5], ['Refraction Ray', 3.5, 8.0], ['Convex Cod', 3.8, 8.5], ['Concave Carp', 3.2, 7.5], ['Focus Flounder', 2.8, 6.5], ['Magnify Mackerel', 2.4, 5.8], ['Flash Fluke', 3.0, 6.8], ['Glimmer Gar', 4.0, 9.0], ['Shine Shark', 4.5, 10.0]],
+        rare: [['Polish Pike', 8.0, 20.0], ['Luster Lungfish', 9.0, 22.0], ['Gloss Grouper', 10.0, 25.0], ['Sheen Skate', 7.5, 18.0], ['Radiant Roughy', 6.5, 15.0], ['Brilliant Barracuda', 11.0, 26.0], ['Luminous Lingcod', 12.0, 28.0], ['Vivid Viperfish', 8.5, 19.0], ['Incandescent Idiacanthus', 7.0, 16.0], ['Glowing Gourami', 5.0, 12.0]],
+        epic: [['Neon Needlefish', 40.0, 85.0], ['Flashlight Fish', 35.0, 80.0], ['Lantern Lurker', 45.0, 100.0], ['Beacon Bass', 50.0, 110.0], ['Signal Sturgeon', 55.0, 120.0], ['Transmission Trout', 48.0, 105.0], ['Broadcast Bream', 42.0, 95.0], ['Frequency Fish', 38.0, 90.0]],
+        legendary: [['Wavelength Whale', 300.0, 750.0], ['Amplitude Angler', 280.0, 700.0], ['Phase Pike', 260.0, 650.0], ['Interference Icefish', 250.0, 600.0], ['Diffraction Drum', 320.0, 800.0]],
+        mythic: [['Polarization Puffer', 2000.0, 4800.0], ['The Great Mirror', 2500.0, 5500.0], ['The White Light', 3000.0, 7000.0], ['The Final Reflection', 2800.0, 6500.0]]
+    },
+    silk_thread_stream: {
+        common: [['Silkworm Minnow', 0.1, 0.4], ['Threadfin Dart', 0.2, 0.6], ['Bobbin Guppy', 0.1, 0.3], ['Lint Roach', 0.2, 0.5], ['Cotton Carp', 0.4, 1.2], ['Spool Sprat', 0.1, 0.3], ['Needle-Point Nibbler', 0.1, 0.4], ['Patchwork Prawn', 0.2, 0.5], ['Felt Flounder', 0.5, 1.5], ['Button Bass', 0.6, 1.8], ['Twine Tetra', 0.2, 0.6], ['Canvas Chub', 0.5, 1.4], ['Calico Catfish', 0.8, 2.5], ['Wooly Wrasse', 0.4, 1.2], ['Lace Loach', 0.2, 0.7], ['Hemming Herring', 0.3, 0.8], ['Stitch Sardine', 0.2, 0.6], ['Tassel Trout', 0.6, 2.0], ['Ribbon Rasbora', 0.1, 0.4], ['Seam Snapper', 0.5, 1.6], ['Thimble Tetra', 0.1, 0.3], ['Fiber Fin', 0.3, 0.9], ['Flax Fluke', 0.6, 1.7], ['Jute Jawfish', 0.4, 1.3], ['Hemp Halibut', 0.8, 2.2], ['String Ray', 0.7, 2.1], ['Yarn Goby', 0.2, 0.5], ['Textile Tilapia', 0.5, 1.8]],
+        uncommon: [['Velvet Viperfish', 2.0, 5.5], ['Satin Salmon', 2.5, 6.0], ['Corduroy Cod', 3.0, 7.5], ['Denim Dory', 2.8, 6.5], ['Polyester Perch', 2.2, 5.8], ['Nylon Needlefish', 1.8, 4.5], ['Embroidery Eel', 3.5, 8.0], ['Quilt Queenfish', 3.0, 7.0], ['Weaver Wrasse', 2.5, 6.2], ['Spindle Shark', 4.0, 9.5], ['Shuttle Shad', 1.5, 4.0], ['Loom Lurker', 3.8, 8.5], ['Woven Walleye', 3.2, 7.8], ['Selvage Skate', 4.5, 10.0], ['Burlap Barracuda', 5.0, 11.0], ['Chenille Chub', 2.0, 5.0], ['Flannel Filefish', 2.4, 5.6], ['Tulle Tuna', 4.0, 9.0], ['Muslin Mullet', 2.6, 6.4], ['Chiffon Cichlid', 2.2, 5.5], ['Organza Oscar', 2.8, 6.8], ['Pattern Pike', 3.5, 8.2]],
+        rare: [['Cashmere Carp', 8.0, 18.0], ['Pashmina Pike', 9.0, 20.0], ['Damask Drum', 7.5, 16.0], ['Brocade Bass', 8.5, 19.0], ['Paisley Plaice', 6.0, 14.0], ['Tartan Trout', 7.0, 15.0], ['Argyle Angler', 9.5, 21.0], ['Houndstooth Halibut', 10.0, 22.0], ['Herringbone Hake', 6.5, 14.5], ['Tweed Tarpon', 11.0, 24.0], ['Mohair Marlin', 12.0, 26.0], ['Angora Arapaima', 15.0, 32.0], ['Merino Mackerel', 5.5, 12.0], ['Silk-Spinner Shark', 14.0, 30.0], ['Golden-Thread Grouper', 13.0, 28.0], ['Silver-Needle Snapper', 8.0, 17.0]],
+        epic: [['Kimono Koi', 40.0, 90.0], ['Saree Sturgeon', 45.0, 100.0], ['Toga Tigerfish', 50.0, 110.0], ['Tunic Tuna', 55.0, 120.0], ['Robe Ray', 42.0, 95.0], ['Mantle Manta', 48.0, 105.0], ['Vestment Viper', 38.0, 85.0], ['Cloak Coelacanth', 60.0, 130.0], ['Scarf Sawfish', 35.0, 80.0], ['Poncho Piranha', 30.0, 70.0], ['Blanket Bass', 40.0, 88.0], ['Duvet Dorado', 44.0, 98.0]],
+        legendary: [['The Golden Fleece', 250.0, 600.0], ['Mithril Weave', 280.0, 650.0], ['Spidersilk Sovereign', 300.0, 700.0], ['The Grand Weaver', 350.0, 800.0], ['Eternal Loom', 320.0, 750.0], ['Fate\'s Thread', 400.0, 900.0]],
+        mythic: [['Fabric of Reality', 2000.0, 4800.0], ['Time-Weaver Titan', 2500.0, 5500.0], ['The Unraveler', 2200.0, 5000.0], ['Primordial Strand', 2800.0, 6000.0]]
     }
 };
 // Freeze fish database to prevent console exploits
@@ -545,6 +620,22 @@ class Game {
     resolveMinigame() {
         if (!this.minigame.active) return;
 
+        const fish = this.minigame.fishOnLine;
+        const rod = RODS.find(r => r.id === this.state.rod);
+
+        // Pre-check: Fish too heavy for rod? It ALWAYS escapes - never catchable
+        if (fish.weight > rod.capacity) {
+            this.minigame.active = false;
+            this.ui.showMinigame(false);
+            document.getElementById('action-btn').classList.remove('reeling');
+
+            this.log(`RELEASED! ${fish.name} (${fish.weight}kg) was too heavy to lift with your ${rod.name} (${rod.capacity}kg max).`);
+            this.ui.updateStatus(`${fish.name} broke free! Too heavy!`, "danger");
+            this.ui.floatText("TOO HEAVY!");
+            this.breakCombo();
+            return;
+        }
+
         const hit = this.minigame.pos >= this.minigame.targetStart &&
             this.minigame.pos <= (this.minigame.targetStart + this.minigame.targetWidth);
 
@@ -553,9 +644,9 @@ class Game {
         document.getElementById('action-btn').classList.remove('reeling');
 
         if (hit) {
-            this.catchSuccess(this.minigame.fishOnLine);
+            this.catchSuccess(fish);
         } else {
-            this.catchFail(this.minigame.fishOnLine);
+            this.catchFail(fish);
         }
     }
 
@@ -563,15 +654,10 @@ class Game {
     catchSuccess(fish) {
         const rod = RODS.find(r => r.id === this.state.rod);
 
-        // 1. Capacity Check
-        if (fish.weight > rod.capacity) {
-            this.log(`LINE SNAP! ${fish.name} (${fish.weight}kg) was too heavy for your ${rod.name} (${rod.capacity}kg).`);
-            this.ui.updateStatus("Line Snapped!", "danger");
-            this.breakCombo();
-            return;
-        }
+        // Note: Capacity check now happens in resolveMinigame() - 
+        // fish too heavy for the rod will ALWAYS escape before reaching here
 
-        // 2. Success!
+        // 1. Success!
         this.incrementCombo();
 
         // Apply Combo Bonus to Value
@@ -767,10 +853,11 @@ class Game {
         const fish = this.minigame.fishOnLine;
         const rod = RODS.find(r => r.id === this.state.rod);
 
-        // Capacity Check (only way to fail in auto mode)
+        // Capacity Check - Fish too heavy ALWAYS escapes (same as manual mode)
         if (fish.weight > rod.capacity) {
-            this.log(`🤖 LINE SNAP! ${fish.name} (${fish.weight}kg) was too heavy for ${rod.name}.`);
-            this.ui.updateStatus('🤖 Line Snapped!', 'danger');
+            this.log(`🤖 RELEASED! ${fish.name} (${fish.weight}kg) was too heavy to lift with ${rod.name} (${rod.capacity}kg max).`);
+            this.ui.updateStatus(`🤖 ${fish.name} broke free! Too heavy!`, 'danger');
+            this.breakCombo();
         } else {
             // Auto-fishing has a 10x combo limit for balance
             if (this.state.combo < 10) {
