@@ -546,7 +546,7 @@ class Game {
 
         let cumulative = 0;
         // Total weight approx 100.
-        // We iterate backwards (Mythic -> Common) to check high tiers first? 
+        // We iterate backwards (Mythic -> Common) to check high tiers first?
         // No, standard weighted roll:
         let pool = [];
         for (let k of tiers) {
@@ -654,7 +654,7 @@ class Game {
     catchSuccess(fish) {
         const rod = RODS.find(r => r.id === this.state.rod);
 
-        // Note: Capacity check now happens in resolveMinigame() - 
+        // Note: Capacity check now happens in resolveMinigame() -
         // fish too heavy for the rod will ALWAYS escape before reaching here
 
         // 1. Success!
@@ -1087,28 +1087,57 @@ class Inventory {
 
     render() {
         const tableBody = document.querySelector('#inventory-table tbody');
+        const inventory = this.game.state.inventory;
+        const currentRows = tableBody.children.length;
+
+        // Optimization: If inventory is empty, clear table immediately
+        if (inventory.length === 0) {
+            tableBody.innerHTML = '';
+            return;
+        }
+
+        // Optimization: Differential Update
+        // If we have more items in inventory than rows, and the existing rows match the start of the list,
+        // we only need to render the new items at the top.
+        if (inventory.length > currentRows) {
+            const newCount = inventory.length - currentRows;
+            const newItems = inventory.slice(-newCount);
+
+            // Iterate through new items and prepend them to the table.
+            // Since we want the NEWEST item at the TOP, and we slice [Older, ..., Newest],
+            // simply prepending each one in order works because the last one prepended ends up at the top.
+            // Example: Add A then B. Prepend A (A, ...). Prepend B (B, A, ...).
+            newItems.forEach(item => {
+                tableBody.prepend(this.createRow(item));
+            });
+            return;
+        }
+
+        // Fallback: Full Re-render
+        // Used when inventory shrinks (other than clear) or length mismatch implies unsynced state.
         tableBody.innerHTML = '';
-
-        // Show latest first
-        [...this.game.state.inventory].reverse().forEach(item => {
-            const tr = document.createElement('tr');
-
-            const rarityColor = RARITY[item.rarity].color;
-            const buffHtml = item.buff
-                ? `<span style="font-size:0.75rem; background:${rarityColor}33; color:${rarityColor}; padding:2px 6px; border-radius:4px; margin-left:0.5rem;">${item.buff}</span>`
-                : '';
-
-            tr.innerHTML = `
-                <td>
-                    <span style="color:${rarityColor}; font-weight:600">${item.name}</span>
-                    ${buffHtml}
-                </td>
-                <td><span class="rarity-tag" style="background:${rarityColor}22; color:${rarityColor}">${item.rarity}</span></td>
-                <td>${item.weight} kg</td>
-                <td style="color:#facc15; font-weight:600">${item.value.toLocaleString()}</td>
-            `;
-            tableBody.appendChild(tr);
+        [...inventory].reverse().forEach(item => {
+            tableBody.appendChild(this.createRow(item));
         });
+    }
+
+    createRow(item) {
+        const tr = document.createElement('tr');
+        const rarityColor = RARITY[item.rarity].color;
+        const buffHtml = item.buff
+            ? `<span style="font-size:0.75rem; background:${rarityColor}33; color:${rarityColor}; padding:2px 6px; border-radius:4px; margin-left:0.5rem;">${item.buff}</span>`
+            : '';
+
+        tr.innerHTML = `
+            <td>
+                <span style="color:${rarityColor}; font-weight:600">${item.name}</span>
+                ${buffHtml}
+            </td>
+            <td><span class="rarity-tag" style="background:${rarityColor}22; color:${rarityColor}">${item.rarity}</span></td>
+            <td>${item.weight} kg</td>
+            <td style="color:#facc15; font-weight:600">${item.value.toLocaleString()}</td>
+        `;
+        return tr;
     }
 
     sellAll() {
